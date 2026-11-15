@@ -1,139 +1,331 @@
-/* Token Radar's plain theme. The five palette values, two radii and two families are the whole style;
-   everything else is spacing, a hairline and a type step. */
+/* Token Radar: a warm ink-on-paper scheme, so a valuations board reads like a printed table rather
+   than a terminal. Two typefaces, four spacings and one accent carry the whole page; every rule below
+   is either the grid, a hairline, or a single type step. Nothing here is a framework. */
+
 :root {
-  --canvas: #f2f5f3;
-  --surface: #ffffff;
-  --ink: #16211c;
-  --muted: #5f6f67;
-  --border: #d8e2dc;
-  --accent: #0f7a5a;
-  --negative: #b23b2e;
-  --radius-control: 8px;
-  --radius-panel: 14px;
-  --font-body: system-ui, -apple-system, "Segoe UI", sans-serif;
+  /* Warm neutrals: paper, card, ink, and a muted grey for the columns that are context, not claim. */
+  --paper: #faf7f2;
+  --card: #fffdfa;
+  --ink: #1f1a14;
+  --ink-soft: #6b6157;
+  --hairline: #e3dbcf;
+  --hairline-firm: #cfc3b2;
+  /* One accent for value and one for a falling figure; both pass contrast on the card. */
+  --value: #1d5c46;
+  --fall: #9c3a2b;
+  --value-wash: #e8f1ec;
+  /* Spacing scale, and the only two radii in the sheet. */
+  --s1: 4px;
+  --s2: 8px;
+  --s3: 14px;
+  --s4: 22px;
+  --s5: 34px;
+  --s6: 52px;
+  --r-control: 6px;
+  --r-card: 4px;
+  /* Body is a humanist stack; numbers are tabular and monospaced so columns line up. */
+  --font-body: "Iowan Old Style", "Palatino Linotype", Palatino, Georgia, serif;
+  --font-ui: system-ui, -apple-system, "Segoe UI", sans-serif;
   --font-num: ui-monospace, "SF Mono", Menlo, monospace;
-  --step-1: 4px;
-  --step-2: 8px;
-  --step-3: 12px;
-  --step-4: 16px;
-  --step-5: 24px;
-  --step-6: 32px;
-  --step-7: 48px;
 }
 
 * { box-sizing: border-box; }
 html { color-scheme: light; }
+
 body {
   margin: 0;
-  background: var(--canvas);
+  background: var(--paper);
   color: var(--ink);
-  font: 400 15px/1.5 var(--font-body);
-  text-wrap: pretty;
+  font: 400 15px/1.55 var(--font-ui);
+  -webkit-font-smoothing: antialiased;
 }
-h1, h2, h3 { margin: 0; letter-spacing: -0.02em; text-wrap: balance; }
-h1 { font-size: 30px; line-height: 1.15; font-weight: 600; }
-h2 { font-size: 20px; line-height: 1.2; font-weight: 600; }
-h3 { font-size: 16px; line-height: 1.25; font-weight: 600; }
+
+h1, h2, h3 { margin: 0; font-family: var(--font-body); font-weight: 600; letter-spacing: -0.01em; }
+h1 { font-size: 32px; line-height: 1.12; text-wrap: balance; }
+h2 { font-size: 21px; line-height: 1.2; }
+h3 { font-size: 15px; line-height: 1.3; letter-spacing: 0.01em; }
 p { margin: 0; }
 button, input, select { font: inherit; color: inherit; }
 button { cursor: pointer; }
-a { color: var(--accent); }
+a { color: var(--value); }
+
+/* Numbers are the claim, so they get the tabular face and never wrap mid-figure. */
+.num, .cost, .count, td.num, .implied { font-family: var(--font-num); font-variant-numeric: tabular-nums; white-space: nowrap; }
+.pos { color: var(--value); }
+.neg { color: var(--fall); }
+
 .skip {
-  position: absolute; left: -9999px; top: 0; padding: var(--step-2) var(--step-4);
-  background: var(--surface); border: 1px solid var(--border); z-index: 20;
+  position: absolute; left: -9999px; top: 0;
+  padding: var(--s2) var(--s3); background: var(--card);
+  border: 1px solid var(--hairline-firm); z-index: 20;
 }
-.skip:focus { left: var(--step-4); top: var(--step-4); }
-:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+.skip:focus { left: var(--s3); top: var(--s3); }
+:focus-visible { outline: 2px solid var(--value); outline-offset: 2px; }
 
-.shell { max-width: 1320px; margin: 0 auto; padding: var(--step-5) var(--step-6) var(--step-7); }
+/* ---- page shell ------------------------------------------------------------------------------ */
+
+.shell {
+  max-width: 1240px;
+  margin: 0 auto;
+  padding: var(--s5) var(--s5) var(--s6);
+}
+
 .top {
-  display: flex; align-items: flex-start; justify-content: space-between; gap: var(--step-5);
-  padding-bottom: var(--step-4); border-bottom: 1px solid var(--border);
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: var(--s4);
+  padding-bottom: var(--s3);
+  border-bottom: 2px solid var(--ink);
 }
-.brand { display: flex; align-items: center; gap: var(--step-3); }
-.mark { width: 12px; height: 12px; border-radius: 50%; background: var(--accent); flex: none; }
-.brand-name { font-family: var(--font-num); font-size: 13px; letter-spacing: 0.02em; color: var(--muted); }
-.top-meta { display: flex; flex-wrap: wrap; gap: var(--step-3); justify-content: flex-end; color: var(--muted); font-size: 13px; }
-.top-meta span { white-space: nowrap; }
-.lede { display: grid; grid-template-columns: minmax(0, 1.35fr) minmax(280px, 0.65fr); gap: var(--step-6); padding: var(--step-6) 0 var(--step-5); }
-.lede p { color: var(--muted); max-width: 62ch; margin-top: var(--step-2); }
-.facts { display: grid; gap: var(--step-2); align-content: start; border-left: 1px solid var(--border); padding-left: var(--step-5); }
-.fact { display: flex; align-items: baseline; justify-content: space-between; gap: var(--step-3); }
-.fact b { font-family: var(--font-num); font-size: 15px; font-weight: 500; }
-.fact span { color: var(--muted); font-size: 13px; }
-
-.controls { display: flex; flex-wrap: wrap; align-items: end; gap: var(--step-3); padding: var(--step-4) 0; border-top: 1px solid var(--border); }
-.field { display: grid; gap: var(--step-1); }
-.field label { color: var(--muted); font-size: 12px; }
-.field input, .field select {
-  min-height: 36px; padding: 0 var(--step-3); border: 1px solid var(--border); border-radius: var(--radius-control);
-  background: var(--surface); min-width: 180px;
+.brand { display: flex; align-items: center; gap: var(--s2); }
+.mark {
+  width: 10px; height: 10px; border-radius: 50%;
+  background: var(--value);
+  box-shadow: 0 0 0 3px var(--value-wash);
 }
-.field input { min-width: 280px; }
-.tabs { display: flex; gap: var(--step-1); padding: 3px; border: 1px solid var(--border); border-radius: var(--radius-control); background: var(--surface); }
-.tabs button { min-height: 30px; padding: 0 var(--step-3); border: 0; border-radius: 6px; background: transparent; color: var(--muted); }
-.tabs button[aria-pressed="true"] { background: var(--ink); color: var(--surface); }
-.count { margin-left: auto; color: var(--muted); font-size: 13px; align-self: center; }
+.brand-name {
+  font-family: var(--font-body);
+  font-size: 17px;
+  font-weight: 600;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+}
+.top-meta {
+  display: flex;
+  gap: var(--s3);
+  font-size: 12px;
+  color: var(--ink-soft);
+  font-family: var(--font-num);
+  letter-spacing: 0.02em;
+}
+/* The metadata reads as three separate facts, each with its own dot separator. */
+.top-meta span + span::before { content: "·"; margin-right: var(--s3); color: var(--hairline-firm); }
 
-.panel { background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius-panel); overflow: hidden; }
+/* ---- lede: the headline claim, with the coverage facts beside it ------------------------------ */
+
+.lede {
+  display: grid;
+  grid-template-columns: minmax(0, 1.55fr) minmax(210px, 0.7fr);
+  gap: var(--s5);
+  align-items: end;
+  padding: var(--s4) 0 var(--s4);
+  border-bottom: 1px solid var(--hairline);
+}
+.lede h1 { margin-bottom: var(--s2); }
+.sub { font-size: 13px; color: var(--ink-soft); }
+.lede .sub { font-size: 15px; max-width: 62ch; }
+
+.facts { display: grid; gap: var(--s1); }
+.fact {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: var(--s3);
+  padding: var(--s1) 0;
+  border-bottom: 1px dotted var(--hairline-firm);
+  font-size: 12.5px;
+  color: var(--ink-soft);
+}
+.fact:last-child { border-bottom: none; }
+.fact b { font-family: var(--font-num); font-size: 13px; color: var(--ink); }
+
+/* ---- controls --------------------------------------------------------------------------------- */
+
+.controls {
+  display: flex;
+  align-items: center;
+  gap: var(--s3);
+  flex-wrap: wrap;
+  padding: var(--s3) 0;
+  position: sticky;
+  top: 0;
+  background: linear-gradient(var(--paper) 88%, rgba(250, 247, 242, 0));
+  z-index: 5;
+}
+.field { display: flex; flex-direction: column; gap: 3px; }
+.field label, .status {
+  font-size: 10.5px;
+  letter-spacing: 0.09em;
+  text-transform: uppercase;
+  color: var(--ink-soft);
+  font-weight: 600;
+}
+.controls input[type="search"], .controls select {
+  min-width: 210px;
+  padding: 7px 10px;
+  background: var(--card);
+  border: 1px solid var(--hairline-firm);
+  border-radius: var(--r-control);
+  font-size: 13.5px;
+}
+.controls input[type="search"]:focus, .controls select:focus { border-color: var(--value); }
+
+.tabs { display: flex; gap: 2px; background: var(--hairline); padding: 2px; border-radius: var(--r-control); }
+.tabs button {
+  border: none;
+  background: transparent;
+  padding: 6px 14px;
+  border-radius: calc(var(--r-control) - 2px);
+  font-size: 13px;
+  color: var(--ink-soft);
+}
+.tabs button[aria-pressed="true"] {
+  background: var(--ink);
+  color: var(--paper);
+  font-weight: 500;
+}
+.count { margin-left: auto; font-size: 12px; color: var(--ink-soft); }
+
+/* ---- the board -------------------------------------------------------------------------------- */
+
+.panel {
+  border: 1px solid var(--hairline-firm);
+  border-radius: var(--r-card);
+  background: var(--card);
+  overflow: hidden;
+}
+.panel > .sub { padding: var(--s2) var(--s3); border-bottom: 1px solid var(--hairline); }
+
 .table-wrap { overflow-x: auto; }
-table { width: 100%; border-collapse: collapse; font-size: 14px; }
-th, td { padding: var(--step-3) var(--step-3); border-bottom: 1px solid var(--border); text-align: left; vertical-align: middle; }
-th { color: var(--muted); font-size: 12px; font-weight: 500; white-space: nowrap; }
-th button { display: inline-flex; align-items: center; gap: var(--step-1); border: 0; background: none; padding: 0; color: inherit; font: inherit; }
-th button:hover { color: var(--ink); }
-tbody tr { cursor: pointer; }
-tbody tr:hover { background: var(--surface); }
-tbody tr[data-selected="true"] { background: color-mix(in srgb, var(--accent) 8%, var(--surface)); }
-.num { font-family: var(--font-num); font-variant-numeric: tabular-nums; white-space: nowrap; }
-.name { display: grid; gap: 2px; }
-.name b { font-weight: 600; }
-.sub { color: var(--muted); font-size: 12px; }
-.pos { color: var(--accent); }
-.neg { color: var(--negative); }
-.bar { width: 120px; height: 6px; border-radius: 3px; background: color-mix(in srgb, var(--border) 60%, var(--surface)); overflow: hidden; }
-.bar i { display: block; height: 100%; background: var(--accent); }
-.implied { display: flex; align-items: center; gap: var(--step-2); }
-.status { display: inline-flex; align-items: center; gap: 6px; color: var(--muted); font-size: 12px; white-space: nowrap; }
-.status::before { content: ""; width: 6px; height: 6px; border-radius: 50%; background: var(--accent); }
+table { width: 100%; border-collapse: collapse; font-size: 13.5px; }
+thead th {
+  position: sticky;
+  top: 0;
+  background: var(--card);
+  text-align: left;
+  padding: var(--s2) var(--s3);
+  font-size: 10.5px;
+  font-weight: 600;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--ink-soft);
+  border-bottom: 1px solid var(--hairline-firm);
+  white-space: nowrap;
+}
+thead th button {
+  border: none; background: none; padding: 0;
+  font: inherit; color: inherit; text-transform: inherit; letter-spacing: inherit;
+}
+thead th button:hover { color: var(--value); }
+tbody td { padding: var(--s2) var(--s3); border-bottom: 1px solid var(--hairline); vertical-align: middle; }
+tbody tr:last-child td { border-bottom: none; }
+tbody tr:hover td { background: var(--value-wash); }
+tbody tr.selected td { background: var(--value-wash); box-shadow: inset 3px 0 0 var(--value); }
+/* A name cell holds the protocol and, beneath it, its category and chains: two lines in one cell, so
+   the column stays narrow without the description colliding with the name. */
+.name { display: flex; flex-direction: column; gap: 1px; }
+.name b { font-family: var(--font-body); font-size: 15px; font-weight: 600; line-height: 1.25; }
+.name .sub { font-size: 12px; line-height: 1.3; }
 
-.model { margin-top: var(--step-4); padding: var(--step-5); display: grid; gap: var(--step-3); }
-.formula { font-family: var(--font-num); font-size: 13px; line-height: 1.7; color: var(--muted); overflow-wrap: anywhere; }
-.empty { padding: var(--step-7) var(--step-5); text-align: center; display: grid; gap: var(--step-3); justify-items: center; }
-.empty p { color: var(--muted); }
-.button { min-height: 36px; padding: 0 var(--step-4); border: 1px solid var(--border); border-radius: var(--radius-control); background: var(--surface); }
-.button.primary { background: var(--accent); border-color: var(--accent); color: var(--surface); }
+/* The implied-value bar is the ranking made visible: the inline width is the row's share of the
+   largest value on the board. The element it fills is an <i>, so the rule has to name that. */
+.implied { display: flex; align-items: center; gap: var(--s2); }
+.bar {
+  flex: 1;
+  min-width: 52px;
+  height: 6px;
+  background: var(--hairline);
+  border-radius: 3px;
+  overflow: hidden;
+}
+.bar i {
+  display: block;
+  height: 100%;
+  background: var(--value);
+  border-radius: 3px;
+}
+
+/* ---- detail drawer ---------------------------------------------------------------------------- */
 
 .detail {
-  position: fixed; top: 0; right: 0; bottom: 0; width: min(520px, 92vw); z-index: 10;
-  background: var(--surface); border-left: 1px solid var(--border); padding: var(--step-5);
-  overflow-y: auto; transform: translateX(0); transition: transform 200ms cubic-bezier(0, 0, 0.2, 1);
+  width: min(760px, 94vw);
+  max-height: 92vh;
+  padding: 0;
+  border: 1px solid var(--hairline-firm);
+  border-radius: var(--r-card);
+  background: var(--card);
+  color: var(--ink);
+  overflow-y: auto;
 }
-.detail[hidden] { display: none; }
-.detail { margin: 0 0 0 auto; max-height: 100%; }
-.detail::backdrop { background: rgba(22, 33, 28, 0.28); }
-.detail-head { display: flex; align-items: start; justify-content: space-between; gap: var(--step-4); }
-.detail-head > div { min-width: 0; }
-.detail-head .sub { overflow-wrap: anywhere; }
-.close { flex: none; min-width: 32px; min-height: 32px; padding: 0 var(--step-2); white-space: nowrap; border: 1px solid var(--border); border-radius: var(--radius-control); background: var(--surface); }
-.detail h2 { margin-top: var(--step-1); }
-.detail .sub { margin-top: var(--step-1); }
-.detail-section { margin-top: var(--step-5); padding-top: var(--step-4); border-top: 1px solid var(--border); }
-.detail-section h3 { margin-bottom: var(--step-2); }
-.equation { display: grid; gap: var(--step-2); font-family: var(--font-num); font-size: 13px; }
-.equation div { display: flex; justify-content: space-between; gap: var(--step-3); }
-.equation span { color: var(--muted); }
-.steps { margin: 0; padding-left: var(--step-5); display: grid; gap: var(--step-3); }
-.steps li { padding-left: var(--step-1); }
-.steps b { display: block; font-weight: 500; }
-.cost { color: var(--muted); font-size: 12px; font-family: var(--font-num); }
+.detail::backdrop { background: rgba(31, 26, 20, 0.42); }
+.detail-head {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: var(--s4);
+  padding: var(--s4) var(--s4) var(--s3);
+  border-bottom: 2px solid var(--ink);
+  position: sticky;
+  top: 0;
+  background: var(--card);
+  z-index: 2;
+}
+.detail-head .sub { font-family: var(--font-num); font-size: 12px; letter-spacing: 0.02em; }
+.detail-section { padding: var(--s3) var(--s4) var(--s4); border-bottom: 1px solid var(--hairline); }
+.detail-section:last-child { border-bottom: none; }
+.detail-section h3 {
+  text-transform: uppercase;
+  letter-spacing: 0.09em;
+  font-family: var(--font-ui);
+  font-size: 10.5px;
+  color: var(--ink-soft);
+  margin-bottom: var(--s2);
+}
 
-@media (max-width: 900px) {
-  .shell { padding: var(--step-4); }
-  .lede { grid-template-columns: 1fr; gap: var(--step-4); }
-  .facts { border-left: 0; border-top: 1px solid var(--border); padding-left: 0; padding-top: var(--step-4); }
-  .field input { min-width: 0; width: 100%; }
+/* The equation is a receipt: label left, figure right, a rule before the total. */
+.formula, .equation { display: grid; gap: 3px; }
+.equation > div {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: var(--s4);
+  padding: 5px 0;
+  border-bottom: 1px dotted var(--hairline);
+  font-size: 13.5px;
 }
-@media (prefers-reduced-motion: reduce) {
-  *, *::before, *::after { transition-duration: 0.01ms !important; animation-duration: 0.01ms !important; animation-iteration-count: 1 !important; }
+.equation > div span { color: var(--ink-soft); }
+.equation > div b { font-size: 14px; }
+.equation > .total {
+  border-top: 2px solid var(--ink);
+  border-bottom: none;
+  margin-top: var(--s1);
+  padding-top: var(--s2);
+}
+.equation > .total b { font-size: 19px; color: var(--value); }
+
+.steps { margin: 0; padding-left: 1.25em; display: grid; gap: var(--s3); }
+.steps li { font-size: 13.5px; }
+.steps li b { display: block; font-weight: 600; font-family: var(--font-body); font-size: 14px; }
+.steps li .cost { display: block; margin-top: 3px; font-size: 11.5px; color: var(--ink-soft); }
+
+.close {
+  border: 1px solid var(--hairline-firm);
+  background: var(--card);
+  padding: 5px 13px;
+  border-radius: var(--r-control);
+  font-size: 12.5px;
+}
+.close:hover { border-color: var(--value); color: var(--value); }
+
+/* ---- the method panel: the model stated, not hidden ------------------------------------------- */
+
+.model { margin-top: var(--s4); }
+.model h2 { margin-bottom: var(--s2); }
+.model p { font-size: 13.5px; color: var(--ink-soft); max-width: 92ch; }
+.model code, .model .num { font-family: var(--font-num); font-size: 12.5px; color: var(--ink); }
+
+.empty {
+  padding: var(--s5);
+  text-align: center;
+  color: var(--ink-soft);
+  font-size: 14px;
+}
+
+@media (max-width: 860px) {
+  .shell { padding: var(--s4) var(--s3) var(--s5); }
+  .lede { grid-template-columns: 1fr; gap: var(--s3); }
+  h1 { font-size: 26px; }
+  .controls { position: static; }
+  .count { margin-left: 0; }
 }
